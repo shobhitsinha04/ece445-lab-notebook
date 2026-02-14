@@ -1,0 +1,37 @@
+# Abhinav Lab Notebook
+
+## Project Summary
+
+**Project:** Combative Hardened Ultra Tumbler (`C.H.U.T.`), a compact battlebot with two drive motors, an ESP32-based controller, a brushless weapon motor, printed chassis components, and a custom PCB for power and control. The final project requirements emphasized wireless control, response under 100 ms, shutdown within 250 ms of communication loss, drivetrain speed around 2 m/s, and weapon speed above 2000 RPM [1].
+
+**Primary responsibilities:** firmware architecture, controller interface, PWM/motor control, integration testing, ESC migration, and final system verification.
+
+## 2026-02-13
+
+**Objective:** Define the initial system concept and convert the battlebot idea into a buildable ECE 445 project proposal.
+
+**Work completed:** I helped formalize the battlebot as a constrained embedded systems project instead of a vague robotics idea. The first pass at the system partition was battery, power regulation, ESP32 controller, two drive motors, one weapon motor, custom PCB, and printed chassis. I also identified that the control subsystem had to do more than simple on/off actuation; the robot needed independent left/right drive authority and a safe method to arm or disarm the weapon.
+
+**Design decisions:** We treated the project as an integration problem with three major interfaces: electrical power, mechanical packaging, and real-time control. That framing made it easier to assign work and to define testable requirements.
+
+**Alternatives considered:** A simpler remote-control vehicle without a weapon would have reduced risk, but it would not have exercised enough custom embedded design. A fully custom brushless control path for every motor was also discussed indirectly, but that increased firmware and driver complexity too early.
+
+**Equations/calculations:** At this stage I recorded the control relationship that would drive later firmware design: average motor voltage under PWM is approximated by `V_avg = D * V_batt`, where `D` is duty cycle.
+
+**Testing/debugging results:** No hardware testing yet. This entry established the control requirements that future tests would verify.
+
+**Partner summary:** Rahul focused on motor/power architecture and likely driver choices. Shobhit started assessing whether the mass, wheel placement, and weapon geometry could fit into a printable chassis.
+
+**Next steps:** Finalize the power tree, choose the control microcontroller, and define a motor-control interface that can be exercised before full mechanical integration.
+
+## References
+
+1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
+2. ECE 445 Lab Notebook guide in [`guide/`](../../guide).
+3. Espressif, [ESP32-C3-WROOM-02 & ESP32-C3-WROOM-02U Datasheet](https://www.espressif.com/sites/default/files/documentation/esp32-c3-wroom-02_datasheet_en.pdf).
+4. Texas Instruments, [DRV8871 product page and datasheet](https://www.ti.com/product/DRV8871).
+5. Texas Instruments, [LMR51430 product page and datasheet](https://www.ti.com/product/LMR51430).
+6. Texas Instruments, [MCF8316A product page and datasheet](https://www.ti.com/product/MCF8316A).
+7. Final schematic screenshot: [`imgs/full_schematic screenshot.png`](../../imgs/full_schematic%20screenshot.png).
+8. Final PCB routing screenshot: [`imgs/route_pcb_image.png`](../../imgs/route_pcb_image.png).
+9. Project photos and CAD screenshots in [`imgs/`](../../imgs).
