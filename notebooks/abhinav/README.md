@@ -24,6 +24,24 @@
 
 **Next steps:** Finalize the power tree, choose the control microcontroller, and define a motor-control interface that can be exercised before full mechanical integration.
 
+## 2026-02-17
+
+**Objective:** Translate high-level system requirements into a control architecture for the drive and weapon subsystems.
+
+**Work completed:** I wrote down the control surfaces the firmware had to expose: left drive command, right drive command, weapon enable, and weapon speed command. I also noted the need for deadman behavior so loss of controller input would default the robot to a safe state. This session established that PWM would be the central actuator interface for both drive control and later ESC experiments.
+
+**Design decisions:** I separated drive control from weapon control conceptually, because the drive motors needed bidirectional behavior while the weapon path had much stricter startup and safety concerns.
+
+**Alternatives considered:** A single mixed drive command could have been computed off-board and sent as one steering/throttle pair, but exposing per-side control made debugging easier and reduced ambiguity during bring-up.
+
+**Equations/calculations:** For a 4-cell LiPo, the fully charged pack voltage is `4 * 4.2 V = 16.8 V`. This value became the upper bound for any PWM-based command calculations and for later motor overvoltage risk discussions.
+
+**Testing/debugging results:** No bench test yet. The result of the session was a clearer control contract for hardware and firmware interfaces.
+
+**Partner summary:** Rahul continued reviewing current and voltage constraints for the motor paths. Shobhit used motor and battery size assumptions to reserve physical space in the chassis model.
+
+**Next steps:** Align control pins with the emerging schematic and identify which signals need to be exposed for debug.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
