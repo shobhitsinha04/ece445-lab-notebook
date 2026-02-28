@@ -42,6 +42,24 @@
 
 **Next steps:** Align control pins with the emerging schematic and identify which signals need to be exposed for debug.
 
+## 2026-02-24
+
+**Objective:** Plan the ESP32 programming and reset path so firmware bring-up would not block later integration.
+
+**Work completed:** I reviewed the ESP32 programming flow and the supporting USB-to-UART/reset circuitry needed for reliable flashing. I identified the importance of access to reset, boot, UART, and PWM pins during bring-up. This was also when I started treating debug accessibility as part of the firmware design instead of an afterthought. The ESP32-C3-WROOM-02 module documentation was the main reference for boot behavior, pin use, and the available wireless/peripheral features [3].
+
+**Design decisions:** The board needed explicit support for programming and reset rather than assuming one-time firmware loading. A repeatable flash/debug loop was more important than minimizing parts count.
+
+**Alternatives considered:** Using an external USB-UART adapter without onboard support would have simplified the PCB slightly, but it would have made debugging in the assembled robot more awkward.
+
+**Equations/calculations:** No new numeric calculation. I documented a signal dependency instead: `flashability = f(power rail stability, reset path, boot strap correctness, UART access)`.
+
+**Testing/debugging results:** This was a planning session. The main deliverable was a signal list for later board review and firmware bring-up.
+
+**Partner summary:** Rahul was reviewing the CP2102, EN/BOOT support, protection, and general schematic integrity. Shobhit was translating connector and access needs into mechanical cutouts and cable clearance.
+
+**Next steps:** Define a bring-up order: verify rails, verify boot, verify serial output, then verify PWM outputs before connecting power hardware.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
