@@ -42,6 +42,41 @@
 
 **Next steps:** Translate the reviewed architecture into a routed PCB that preserves debug accessibility.
 
+## 2026-03-05
+
+**Objective:** Finalize PCB manufacturability choices and debug accessibility.
+
+**Work completed:** I reviewed test-point coverage, connector placement, and the practical routing cost of exposing critical signals. I also considered current-carrying paths, the size of power copper features, and whether the board layout left enough room around headers and mounting hardware.
+
+**Design decisions:** I favored a board that was easy to debug and assemble rather than one that was only compact. For this robot, accessible power rails and motor-control nets were worth the layout effort.
+
+**Alternatives considered:** Omitting some test points and relying on vias or component pins as probe targets would have reduced clutter, but would have increased bring-up risk.
+
+**Equations/calculations:** The current-density reasoning was qualitative at this stage, but the principle was simple: high-current motor traces and return paths must be kept short, wide, and easy to inspect.
+
+**Code snippet:** I used small calculation checks like this to keep the board review tied to design current limits instead of only visual trace inspection.
+
+```python
+VBATT_FULL = 16.8
+DRIVE_CURRENT_LIMIT_A = 2.0
+NUM_DRIVE_CHANNELS = 2
+
+def power(voltage, current):
+    return voltage * current
+
+per_channel = power(VBATT_FULL, DRIVE_CURRENT_LIMIT_A)
+total_drive = per_channel * NUM_DRIVE_CHANNELS
+
+print("Worst-case drive channel:", per_channel, "W")
+print("Worst-case two-channel drive:", total_drive, "W")
+```
+
+**Testing/debugging results:** No bench results yet. The outcome was a more supportable PCB plan.
+
+**Partner summary:** Abhinav defined the order in which firmware and electrical functions would be verified. Shobhit started using the board outline and connector placement to constrain the chassis.
+
+**Next steps:** Finish schematic capture and confirm footprint/BOM integrity before fabrication.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

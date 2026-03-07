@@ -60,6 +60,24 @@
 
 **Next steps:** Define a bring-up order: verify rails, verify boot, verify serial output, then verify PWM outputs before connecting power hardware.
 
+## 2026-03-05
+
+**Objective:** Decide what debug access the firmware team needed on the PCB.
+
+**Work completed:** I listed the signals worth exposing during bring-up: power rails, ground, UART, reset, boot, at least one drive PWM channel, and the weapon control PWM line. I also outlined a staged debug process so motor hardware would not be energized before basic controller health was confirmed.
+
+**Design decisions:** Test points are worth the board area because they reduce ambiguity during integration. For this project, the cost of not being able to isolate a wiring or firmware issue was higher than the cost of a few extra copper features.
+
+**Alternatives considered:** A denser board without labeled test points would have looked cleaner, but would have slowed down bring-up and fault isolation.
+
+**Equations/calculations:** The staged verification sequence implicitly follows dependency order: `power good -> MCU boots -> firmware runs -> PWM visible -> actuator responds`.
+
+**Testing/debugging results:** No hardware results yet, but this became the checklist used for later bring-up sessions.
+
+**Partner summary:** Rahul was deciding how many signals were practical to expose on the board and how to route them. Shobhit was setting up the Fusion workflow so the PCB and connectors could be referenced mechanically.
+
+**Next steps:** Finish the PCB and transition from planning to integration-ready hardware.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
