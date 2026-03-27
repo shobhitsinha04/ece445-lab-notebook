@@ -77,6 +77,28 @@ print("Worst-case two-channel drive:", total_drive, "W")
 
 **Next steps:** Finish schematic capture and confirm footprint/BOM integrity before fabrication.
 
+## 2026-03-05 to 2026-03-27
+
+**Objective:** Move from schematic capture to a routable and manufacturable board.
+
+**Work completed:** I assembled the board data needed for ordering and review, including footprints, reference designators, and layout. The BOM screenshot shows the board at a stage where core parts and quantities were already organized, and the route view confirms that the layout reached a nearly complete state. The final routed design included the ESP32-C3-WROOM-02, two DRV8871 drive channels, the LMR51430 buck converter, and the initial MCF8316A weapon-motor path before the later external-ESC change [3][4][5][6].
+
+**Design decisions:** The board was organized in functional regions: drive motor circuitry, MCU/programming support, power regulation, and weapon-motor hardware. Keeping those regions legible made both review and debug easier.
+
+**Figures/diagrams/photos:** Figure R1 shows the BOM and assembled board data snapshot on 2026-03-05. Figure R2 shows the full schematic, and Figure R3 shows the routed PCB.
+
+![Figure R1 - BOM and board planning snapshot on 2026-03-05](../../imgs/bom_assembly_in_progress.jpeg)
+
+![Figure R2 - Full schematic screenshot](../../imgs/full_schematic%20screenshot.png)
+
+![Figure R3 - PCB routing screenshot](../../imgs/route_pcb_image.png)
+
+**Testing/debugging results:** The main result here was design completeness rather than runtime verification. The board was far enough along to support mechanical packaging and later integration.
+
+**Partner summary:** Abhinav aligned firmware signal needs with the board interfaces. Shobhit used the board footprint and mounting-hole locations to reserve internal volume in CAD.
+
+**Next steps:** Validate the power path and motor interfaces during bring-up.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
