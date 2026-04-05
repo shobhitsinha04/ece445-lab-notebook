@@ -63,6 +63,68 @@ def motor_arm_envelope():
 
 **Next steps:** Print the main chassis and begin real fit checks.
 
+## 2026-03-31
+
+**Objective:** Print the first chassis prototype and transition from CAD-only reasoning to physical validation.
+
+**Work completed:** I sent the first chassis body to print. This was the first direct test of whether the main rectangular shell was practical in the lab’s printing workflow and whether the chosen wall and base geometry were realistic.
+
+**Design decisions:** Prototyping early was more valuable than trying to perfect the CAD in isolation. A printed body exposes assembly and tolerance issues that are difficult to predict from the model alone.
+
+**Figures/diagrams/photos:** Figure S3 shows the first chassis print underway on 2026-03-31.
+
+![Figure S3 - First chassis print on 2026-03-31](../../imgs/first_chassis_print%202026-03-31%20at%2011.30.01%20PM.jpeg)
+
+**Testing/debugging results:** Printing itself was the test. The output enabled the next round of physical fit and mounting checks.
+
+**Partner summary:** Abhinav and Rahul were both waiting on physical geometry to validate wire routing, board placement, and accessible control connections.
+
+**Next steps:** Fit motors into the chassis and start refining supporting structures such as skids and mount geometry.
+
+## 2026-04-01
+
+**Objective:** Verify that the printed chassis accepted the drive motors and internal mechanical layout.
+
+**Work completed:** I performed a real fit check with the drive motors inside the printed shell. This let me confirm that the simple rectangular body was large enough to accept the motors while still leaving central volume for the electronics stack.
+
+**Design decisions:** I kept the body as an open-top box during this phase so repeated insertion, removal, and measurement of parts would be easy.
+
+**Alternatives considered:** Closing the body too early with a finalized lid would have slowed iteration and made internal packaging much harder to inspect.
+
+**Figures/diagrams/photos:** Figure S4 shows the drive motors fitted into the printed chassis on 2026-04-01.
+
+![Figure S4 - Fitting drive motors into the chassis on 2026-04-01](../../imgs/fitting%20drive%20motors%20into%20chassis%20%202026-04-01%20at%203.03.01%20PM.jpeg)
+
+**Testing/debugging results:** The fit test reduced uncertainty around internal volume and wheel-track placement.
+
+**Partner summary:** Abhinav used the fit result to keep the control layout realistic. Rahul used it to confirm that board and connector space remained available.
+
+**Next steps:** Iterate the skid design and front-end geometry.
+
+## 2026-04-05
+
+**Objective:** Develop the front skid geometry and compare alternatives quickly in CAD.
+
+**Work completed:** I created multiple skid variants on the same day, which indicates the first pass was not yet satisfactory. The progression from first draft to second draft to integrated assembly view shows a rapid design loop focused on front-end ground interaction and fit with the box chassis.
+
+**Design decisions:** I kept the skids as separate printed parts mounted to the chassis rather than integrating them permanently into the shell. That made orientation, replacement, and angle changes easier.
+
+**Alternatives considered:** A more aggressive single-piece front undertray might have looked cleaner, but separate skids were lower risk and easier to revise.
+
+**Figures/diagrams/photos:** Figure S5 shows the first skid draft, Figure S6 shows the second skid draft, and Figure S7 shows the chassis assembly after skid integration on 2026-04-05.
+
+![Figure S5 - First skid draft on 2026-04-05](../../imgs/first%20draft%20of%20skid%202026-04-05%20at%2012.49.40%20PM.jpeg)
+
+![Figure S6 - Second skid draft on 2026-04-05](../../imgs/second%20draft%20of%20skid%202026-04-05%20at%201.17.51%20PM.jpeg)
+
+![Figure S7 - Chassis assembly with skid on 2026-04-05](../../imgs/chassis%20assembly%20with%20skid%202026-04-05%20at%202.57.20%20PM.jpeg)
+
+**Testing/debugging results:** The need for multiple same-day variants was itself a useful result. It showed that the front contact geometry needed iteration and could not be trusted from the first model alone.
+
+**Partner summary:** Abhinav checked that the skid geometry did not interfere with planned control or test access. Rahul checked that front-end additions would not block connector or wiring space.
+
+**Next steps:** Print the revised chassis and skid set, then move toward the weapon mount.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

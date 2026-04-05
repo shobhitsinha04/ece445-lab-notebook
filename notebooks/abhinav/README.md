@@ -78,6 +78,28 @@
 
 **Next steps:** Finish the PCB and transition from planning to integration-ready hardware.
 
+## 2026-04-01
+
+**Objective:** Refine the control and power assumptions using the partially assembled electrical and mechanical design.
+
+**Work completed:** I summarized the system progress and updated the firmware-side power assumptions, especially the distinction between idle logic load and highly variable motor load. I noted that battery-life calculations would be dominated by motor use, but the controller still needed a stable logic rail during aggressive motion or weapon startup.
+
+**Design decisions:** I treated logic stability as the gating requirement rather than optimizing overall battery runtime, because a brownout in the controller would be more damaging to system behavior than inefficient current draw.
+
+**Alternatives considered:** Running closer to the edge on regulator margin might have saved space or component count, but it would have increased reset risk under load transients.
+
+**Equations/calculations:** Battery runtime was tracked generically as `t_runtime = Capacity / I_avg`. Even without final current data, that equation kept the team focused on separating continuous electronics load from intermittent actuator load.
+
+**Figures/diagrams/photos:** Figure A1 shows the drive motors being test-fit into the printed chassis, which directly constrained wire routing and future integration work.
+
+![Figure A1 - Drive motors fitted into the chassis on 2026-04-01](../../imgs/fitting%20drive%20motors%20into%20chassis%20%202026-04-01%20at%203.03.01%20PM.jpeg)
+
+**Testing/debugging results:** At this point the meaningful result was packaging progress rather than control validation. The mechanical fit check reduced uncertainty about board and harness placement.
+
+**Partner summary:** Rahul refined the power tree and current-budget reasoning. Shobhit was validating that the printed geometry could accept the motors and leave enough room for internal hardware.
+
+**Next steps:** Complete a first full control path from MCU output to motor behavior.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

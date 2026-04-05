@@ -99,6 +99,24 @@ print("Worst-case two-channel drive:", total_drive, "W")
 
 **Next steps:** Validate the power path and motor interfaces during bring-up.
 
+## 2026-04-01
+
+**Objective:** Refine power-budget reasoning once the design had stabilized enough to estimate actual operating modes.
+
+**Work completed:** I revisited the distinction between logic current and motor current. The regulator and ESP32 current draw mattered for stability, but not nearly as much as motor load when estimating battery life. I also noted that the worst electrical stress cases would occur during starts, stalls, and weapon transients rather than during idle MCU operation. Later demo-day verification confirmed that the regulated 3.3 V rail stayed within 5% tolerance under simultaneous drivetrain and weapon loading, which is exactly the failure mode this analysis was intended to prevent [1][5].
+
+**Design decisions:** I treated robust logic power under transient load as the most important electrical success criterion. A shorter runtime is tolerable; uncontrolled resets and brownouts are not.
+
+**Alternatives considered:** Designing to the minimum likely current margin could have reduced component size, but it would have been a poor fit for a combat-style robot.
+
+**Equations/calculations:** Runtime tracking followed `t_runtime = Capacity / I_avg`, but I annotated that `I_avg` must be dominated by actuator load, not by the comparatively small logic load.
+
+**Testing/debugging results:** This was mostly an analysis session, but it informed later choices around motor compatibility and buck-converter expectations.
+
+**Partner summary:** Abhinav updated firmware-side assumptions about safe control under power variation. Shobhit verified that the packaging still supported the board, battery, and wiring plan.
+
+**Next steps:** Bench-test the drive and weapon electrical paths separately.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
