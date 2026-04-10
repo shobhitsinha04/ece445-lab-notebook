@@ -117,6 +117,26 @@ print("Worst-case two-channel drive:", total_drive, "W")
 
 **Next steps:** Bench-test the drive and weapon electrical paths separately.
 
+## 2026-04-08
+
+**Objective:** Diagnose the custom brushless weapon-motor path.
+
+**Work completed:** I treated the weapon-control problem as an electrical and driver-state issue. The observed symptom was that the brushless motor did not enter stable operation, which implied that the cause might be configuration, current limit behavior, startup parameter mismatch, or another fault condition. I compared continued driver-level debugging against the option of migrating the weapon subsystem to an external ESC. The underlying device was the MCF8316A sensorless BLDC driver, so the debugging burden included both board behavior and code-free tuning/configuration behavior [6].
+
+**Design decisions:** I kept the problem statement broad until there were enough observations to justify a subsystem change. That prevented premature blame on the motor, firmware, or PCB alone.
+
+**Alternatives considered:** Continue pushing on the custom brushless driver or replace it with an external ESC. The second option became more attractive as schedule pressure increased.
+
+**Figures/diagrams/photos:** Figure R4 records the brushless motor under evaluation for the weapon subsystem.
+
+![Figure R4 - Brushless weapon motor used during bring-up](../../imgs/brushless_motor_image.jpeg)
+
+**Testing/debugging results:** Non-routine startup behavior persisted, which meant the custom weapon path remained a schedule risk instead of a solved subsystem.
+
+**Partner summary:** Abhinav recorded the control-side observations and used them to frame the integration decision. Shobhit evaluated the mechanical and safety consequences of vibration and incomplete startup.
+
+**Next steps:** If the driver path cannot be stabilized quickly, move to an external ESC for the weapon motor.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

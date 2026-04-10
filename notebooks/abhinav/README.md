@@ -100,6 +100,30 @@
 
 **Next steps:** Complete a first full control path from MCU output to motor behavior.
 
+## 2026-04-08
+
+**Objective:** Investigate the brushless weapon motor bring-up problem and determine whether the custom driver path was viable.
+
+**Work completed:** I logged a debugging session around the brushless weapon motor behavior. The issue was that the motor did not cleanly transition into normal spin; instead, the observed behavior suggested startup trouble or misconfiguration. I treated the problem as a combined firmware/driver/state issue and started organizing the information needed to separate register configuration mistakes from wiring or motor-parameter problems. The initial custom path was based on the MCF8316A sensorless BLDC driver, so the debug process had to account for both control signaling and device configuration state [6].
+
+**Design decisions:** I kept the debugging record centered on observable behavior, control settings, and likely fault classes instead of jumping to a single explanation. That structure mattered because later discussions about switching to an external ESC needed traceable justification.
+
+**Alternatives considered:** We could have continued iterating on the custom brushless driver indefinitely, but that path risked consuming too much of the schedule. The alternative was to preserve the custom board for the rest of the system and externalize weapon commutation to an ESC.
+
+**Equations/calculations:** No closed-form solution was available, but I tracked the dependency that startup success depends on correct commutation parameters, current limits, and an internally consistent command interface.
+
+**Figures/diagrams/photos:** Figure A2 shows the brushless motor selected for the weapon path. Figure A3 shows the CAD assembly state on the same date, which is relevant because a weapon integration decision affected both control and packaging.
+
+![Figure A2 - Brushless weapon motor under evaluation](../../imgs/brushless_motor_image.jpeg)
+
+![Figure A3 - CAD assembly with skids, motor holder, and weapon on 2026-04-08](../../imgs/chassis%20assembly%20cad%20with%20skids%20motor%20holder%20and%20weapon%202026-04-08%20at%208.06.23%20PM.jpeg)
+
+**Testing/debugging results:** The non-routine result was failed or inconsistent startup of the weapon motor. This became the technical basis for considering an external ESC.
+
+**Partner summary:** Rahul analyzed the electrical/fault side of the brushless driver path. Shobhit reviewed the mounting implications of startup vibration and the safety envelope around the spinning weapon.
+
+**Next steps:** Either stabilize the custom brushless control path quickly or switch to an external ESC to protect the schedule.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

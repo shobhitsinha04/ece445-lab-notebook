@@ -125,6 +125,58 @@ def motor_arm_envelope():
 
 **Next steps:** Print the revised chassis and skid set, then move toward the weapon mount.
 
+## 2026-04-06
+
+**Objective:** Produce the revised printed parts after the skid iteration.
+
+**Work completed:** I sent the updated chassis and skid parts to print. This was the mechanical equivalent of committing the new front-end geometry to a real test part.
+
+**Design decisions:** Fast prototype cycles were prioritized over cosmetic refinement. At this stage, every print was meant to answer a fit or assembly question.
+
+**Code snippet:** Before sending the revised chassis/skids to print, I used a simple clearance checklist to decide whether the print should be treated as a fit prototype or a final part.
+
+```python
+checks = {
+    "m3_clearance_hole_mm": 3.2,
+    "wall_thickness_mm": 3.0,
+    "skid_ground_clearance_mm": 2.0,
+    "motor_wire_clearance_mm": 5.0,
+}
+
+for item, value in checks.items():
+    print(f"{item}: target >= {value}")
+```
+
+**Figures/diagrams/photos:** Figure S8 shows the revised chassis and skids being printed on 2026-04-06.
+
+![Figure S8 - Printing new chassis and skids on 2026-04-06](../../imgs/printing%20new%20chassis%20and%20skids%202026-04-06%20at%2012.49.23%20PM.jpeg)
+
+**Testing/debugging results:** The print queued the next physical assembly round and reduced dependence on CAD-only assumptions.
+
+**Partner summary:** Abhinav and Rahul both benefited because this print cycle would directly affect where the board, harnesses, and motors could be mounted.
+
+**Next steps:** Validate the weapon support and shaft/coupling design.
+
+## 2026-04-09
+
+**Objective:** Evaluate the weapon shaft or coupler approach under real hardware conditions.
+
+**Work completed:** A physical failure occurred in the shaft/coupler mechanism. The shaft piece separated from the assembly, making it clear that the first implementation was not mechanically robust enough.
+
+**Design decisions:** After the failure, it was clear the front weapon structure needed a more secure transmission path between motor and weapon or a stronger printed support geometry.
+
+**Alternatives considered:** Continue with the same shaft concept or redesign the coupling and surrounding support. The failure strongly favored redesign.
+
+**Figures/diagrams/photos:** Figure S9 records the failed shaft/coupler condition on 2026-04-09.
+
+![Figure S9 - Failed shaft or coupler on 2026-04-09](../../imgs/our%20shaft%20does%20not%20work%20and%20broke%202026-04-09%20at%207.27.09%20PM.jpeg)
+
+**Testing/debugging results:** This was a clear non-routine mechanical result and one of the most important failures to document. It directly justified later redesign work.
+
+**Partner summary:** Abhinav needed this information because unreliable weapon transmission would affect control and safety assumptions. Rahul needed it because motor and driver success were meaningless without a mechanically sound load path.
+
+**Next steps:** Rework the wheel/motor-shaft interface and continue strengthening the front assembly.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
