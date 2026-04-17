@@ -177,6 +177,30 @@ for item, value in checks.items():
 
 **Next steps:** Rework the wheel/motor-shaft interface and continue strengthening the front assembly.
 
+## 2026-04-14 to 2026-04-16
+
+**Objective:** Improve wheel selection, print the next part set, and reach a first full assembly.
+
+**Work completed:** I finalized a wheel choice, printed the chassis with the weapon and motor holders, and then assembled the first full physical version of the robot. This was the key transition from isolated printed parts to a robot that could be inspected as a full mechanical package. The design priorities remained compact packaging, structural strength, and easy assembly [1].
+
+**Design decisions:** The chosen wheel size and the printed holders balanced availability, fit, and the need for a stable stance. I also kept the assembly modular enough that parts could still be changed without remaking the entire shell.
+
+**Alternatives considered:** Continue evaluating alternate wheels or commit to a final wheel set. The dated photos show that by mid-April the project needed commitment more than additional wheel indecision.
+
+**Figures/diagrams/photos:** Figure S10 shows the selected wheels on 2026-04-14. Figure S11 shows the printed chassis, weapon, and motor holders. Figure S12 shows the first full real-life assembly on 2026-04-16.
+
+![Figure S10 - Final wheel choice on 2026-04-14](../../imgs/final%20wheel%20choice%202026-04-14%20at%202.53.50%20PM.jpeg)
+
+![Figure S11 - Printed chassis, weapon, and motor holders on 2026-04-14](../../imgs/printed%20chassis%20weapon%20and%20motor%20holders%202026-04-14%20at%203.24.13%20PM.jpeg)
+
+![Figure S12 - First full real-life assembly on 2026-04-16](../../imgs/first%20full%20real%20life%20assembly%20of%20battlebot%202026-04-16%20at%206.37.43%20PM.jpeg)
+
+**Testing/debugging results:** The successful full assembly exposed the final fit, wiring-space, and weapon-support issues that still needed refinement before the last chassis revision.
+
+**Partner summary:** Abhinav could now reason about complete-system control and test setup. Rahul could inspect real wiring space, board placement, and connector accessibility.
+
+**Next steps:** Refine the weapon mounts and wheel-to-shaft interface.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
