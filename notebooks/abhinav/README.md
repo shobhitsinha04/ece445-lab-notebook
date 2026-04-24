@@ -124,6 +124,55 @@
 
 **Next steps:** Either stabilize the custom brushless control path quickly or switch to an external ESC to protect the schedule.
 
+## 2026-04-21
+
+**Objective:** Build a practical drive-control interface using the ESP32 and an Xbox-controller-driven host script.
+
+**Work completed:** I developed the control-side architecture for drive testing. The ESP32 accepted command updates, and a Python layer converted Xbox controller input into motor commands. I explicitly considered deadzone behavior, motor inversion, range limiting, and update rate so the robot would be controllable even if the final tuning was still rough. This control split fit the ESP32-C3-WROOM-02 feature set and kept wireless command handling and PWM generation on the embedded side [3].
+
+**Design decisions:** I kept controller interpretation off-board in Python while keeping actuation on the ESP32. That split made rapid iteration easier because input mapping could change without reflashing the robot for every small adjustment.
+
+**Code snippet:** I used this control-mixing logic to convert the Xbox joystick values into left/right motor PWM commands before sending them to the ESP32.
+
+```python
+MIN_PWM = 160
+MAX_PWM = 255
+DEADZONE = 0.15
+EXPO = 2.0
+
+def apply_deadzone(value):
+    if abs(value) < DEADZONE:
+        return 0.0
+    sign = 1 if value > 0 else -1
+    mag = (abs(value) - DEADZONE) / (1.0 - DEADZONE)
+    return sign * (mag ** EXPO)
+
+def scale_to_pwm(value):
+    if value == 0:
+        return 0
+    sign = 1 if value > 0 else -1
+    mag = min(abs(value), 1.0)
+    return sign * round(MIN_PWM + mag * (MAX_PWM - MIN_PWM))
+
+def compute_motor_commands(forward_raw, turn_raw):
+    forward = apply_deadzone(forward_raw)
+    turn = apply_deadzone(turn_raw)
+    left = forward + turn
+    right = forward - turn
+    scale = max(abs(left), abs(right), 1.0)
+    return scale_to_pwm(left / scale), scale_to_pwm(right / scale)
+```
+
+**Alternatives considered:** Directly hardcoding a fixed autonomous or canned-motion test would have been faster, but it would not have exercised the real remote-control workflow needed for the final system.
+
+**Equations/calculations:** A useful control constraint was recorded for later overvoltage reasoning: if a 12 V nominal motor is driven from a 16.8 V pack, a first-order average-voltage match is `D = 12 / 16.8 = 0.714`, or about `71.4%` duty cycle. I also noted that this average-voltage argument does not eliminate transient or stall-current risk.
+
+**Testing/debugging results:** The important result was that the command path was now concrete enough to validate motor response, latency, and sign conventions. Remaining issues were tuning and integration rather than a missing control framework.
+
+**Partner summary:** Rahul supported electrical bring-up by checking control lines, grounds, and driver behavior. Shobhit was adjusting printed tolerances and hardware fit so the assembly could survive repeated bench tests.
+
+**Next steps:** Integrate weapon control into the same operator workflow and validate the full robot under floor testing.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

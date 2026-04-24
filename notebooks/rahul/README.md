@@ -137,6 +137,42 @@ print("Worst-case two-channel drive:", total_drive, "W")
 
 **Next steps:** If the driver path cannot be stabilized quickly, move to an external ESC for the weapon motor.
 
+## 2026-04-21
+
+**Objective:** Support electrical bring-up for ESP32-driven motor control.
+
+**Work completed:** I checked the interface assumptions required for drive testing: valid logic power, shared reference ground, and clean control connections from the ESP32 to the drive electronics. The main electrical role of this session was to make sure that any unexpected motion or lack of motion could be narrowed to firmware logic, mapping, or hardware response.
+
+**Design decisions:** I treated common-ground integrity as non-negotiable. Without it, debugging PWM behavior would be ambiguous.
+
+**Alternatives considered:** Skipping structured signal verification and going straight to full assembly would have been faster in the moment, but much worse for fault isolation.
+
+**Equations/calculations:** No new numeric work. The electrical constraint was binary: if signal reference integrity is wrong, command interpretation is unreliable regardless of firmware quality.
+
+**Code snippet:** During drive bring-up I used a stepped command pattern so I could check motor-driver response, common ground, and rail behavior at low speed before commanding harder ramps.
+
+```python
+import time
+import requests
+
+BASE_URL = "http://10.48.114.45"
+
+def set_motors(m1, m2):
+    requests.post(f"{BASE_URL}/set", data={"m1": m1, "m2": m2}, timeout=1)
+
+for duty in [0, 80, 120, 160]:
+    set_motors(duty, duty)
+    time.sleep(1.0)      # measure VMOT, 3V3, and motor-driver temperature
+
+set_motors(0, 0)
+```
+
+**Testing/debugging results:** The result was a more controlled drive bring-up environment and fewer plausible hidden electrical faults during software testing.
+
+**Partner summary:** Abhinav implemented the actual host-to-robot control path. Shobhit addressed printed-hole and fit issues that would otherwise make repeated assembly/disassembly painful during testing.
+
+**Next steps:** Finalize the weapon path electrical interface around the external ESC if needed.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

@@ -201,6 +201,28 @@ for item, value in checks.items():
 
 **Next steps:** Refine the weapon mounts and wheel-to-shaft interface.
 
+## 2026-04-15 to 2026-04-24
+
+**Objective:** Improve the wheel-shaft coupling and redesign the weapon motor supports.
+
+**Work completed:** I created a dedicated mechanism to mount the wheel to the motor shaft and later revised the front motor arms to accommodate the brushless weapon motor. The revised arms show a stronger and more specialized interface than the early sketch and first arm model.
+
+**Design decisions:** I moved away from generic geometry toward hardware-specific mounting features. That reduced ambiguity at assembly time and better matched the actual purchased components.
+
+**Alternatives considered:** Keep adapting the first arm concept or create a new, brushless-specific support strategy. The later parts show that a targeted redesign was necessary.
+
+**Figures/diagrams/photos:** Figure S13 shows the wheel-to-motor-shaft mechanism on 2026-04-15, and Figure S14 shows the new motor arms for the brushless weapon motor on 2026-04-24.
+
+![Figure S13 - Wheel-to-motor-shaft mechanism on 2026-04-15](../../imgs/created%20mechanism%20to%20mount%20wheel%20to%20motor%20shaft%202026-04-15%20at%201.38.34%20PM.jpeg)
+
+![Figure S14 - New motor arms with brushless motor on 2026-04-24](../../imgs/new%20motor%20arms%20with%20brushless%20motor%202026-04-24%20at%201.42.08%20PM.jpeg)
+
+**Testing/debugging results:** These redesigned parts were driven directly by earlier mechanical failures and fit constraints.
+
+**Partner summary:** Abhinav used the more realistic motor mount geometry when thinking about final weapon control and safety. Rahul used it to understand connector orientation, motor wiring path, and the feasibility of the selected weapon motor.
+
+**Next steps:** Finish protective outer geometry and prepare a clean final mechanical package.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
