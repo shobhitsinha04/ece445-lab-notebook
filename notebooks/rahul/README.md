@@ -173,6 +173,90 @@ set_motors(0, 0)
 
 **Next steps:** Finalize the weapon path electrical interface around the external ESC if needed.
 
+## 2026-04-28
+
+**Objective:** Integrate and debug the external ESC for the weapon motor, and document the associated power/safety concerns.
+
+**Work completed:** I rewired the weapon path concept around the Predator ESC and a 4S LiPo source. I logged the need for a shared ground between controller and ESC signal path, and I also documented the LiPo short incident because it materially changed the project risk picture. I considered several explanations for ESC beeping at higher command levels: calibration mismatch, invalid signal range, low-voltage interpretation, overcurrent during startup, or load-related startup failure. By the time of the final demo-day tests, we were intentionally limiting the weapon to roughly 35% command, where current was about 3 A steady-state and up to 4 A during ramp [1].
+
+**Design decisions:** Migrating to the external ESC was the most pragmatic way to de-risk the weapon motor. I also treated battery handling and wiring discipline as a first-class engineering issue after the short incident.
+
+**Alternatives considered:** Persist with the custom driver or offload commutation to the ESC. The schedule and observed fault behavior favored the ESC.
+
+**Equations/calculations:** The main numeric boundary remained `V_4S,max = 16.8 V`. That value mattered for ESC input suitability, motor stress, and any future discussion of using nominal-12 V hardware on the same pack.
+
+**Testing/debugging results:** The non-routine results were ESC beeping and the battery short event. Both were explicitly recorded because they affected final system confidence and safety process.
+
+**Partner summary:** Abhinav updated the control signal path and calibration assumptions for the ESC. Shobhit revised packaging assumptions because the ESC and its wiring consumed real chassis volume and required secure placement.
+
+**Next steps:** Lock down the final wiring harness and convert the robot from subsystem debug mode to integrated test mode.
+
+## 2026-04-30
+
+**Objective:** Finalize the electrical design explanation for presentation and close out unresolved protection notes.
+
+**Work completed:** I summarized the board architecture, the rationale for the selected motor-control split, and the role of protection parts such as the TVS diode. I recorded that the TVS is intended to clamp transients, not to act as a permanent short across the battery. This distinction matters because it clarifies what protection the design does and does not provide. Final verification tied the protection network to the goal of preventing MCU brownout from motor-induced transients and rail droop [1][4][5].
+
+**Design decisions:** I emphasized that protection strategy must be explained in terms of failure modes, not just part presence. That made the final documentation more technically defensible.
+
+**Alternatives considered:** A superficial explanation of the TVS and input path would have looked complete but would not have shown real understanding of surge versus steady-state behavior.
+
+**Testing/debugging results:** This session consolidated the final electrical story and prepared the power/protection explanation for verification.
+
+**Partner summary:** Abhinav prepared the system-level presentation narrative. Shobhit finalized the wheel protector and other outer-shell refinements that affected how the electrical system would live inside the chassis.
+
+**Next steps:** Review any last-minute motor substitutions for electrical compatibility and thermal risk.
+
+## 2026-05-01
+
+**Objective:** Evaluate electrical compatibility of replacement drive motors and finalize risk statements.
+
+**Work completed:** I checked the consequences of using motors with a nominal rating below the maximum 4S pack voltage. I noted that average-voltage limiting with PWM is only a partial mitigation because winding heating, startup behavior, and transient stress still matter. I also reviewed whether any substitute motor would remain compatible with the driver path and connectors already committed in the design.
+
+**Design decisions:** Compatibility was evaluated at the system level, not just by nominal label. Voltage rating, current draw, thermal margin, and connector practicality all mattered.
+
+**Alternatives considered:** Insist on only 4S-appropriate motors, or accept a controlled-risk compromise with duty-cycle limiting. The latter was only defensible as a constrained last-minute option.
+
+**Equations/calculations:** The average-voltage comparison stayed the same: `D = 12 / 16.8 = 0.714` for a nominal 12 V average target on a fully charged 4S pack.
+
+**Testing/debugging results:** This was a compatibility and risk-review session rather than a new hardware-debug event.
+
+**Partner summary:** Abhinav translated the electrical limit into an operator/control constraint. Shobhit checked whether any substitute hardware would fit existing mounts and couplers.
+
+**Next steps:** Close out final verification with the completed robot and record any remaining measurement notes.
+
+## 2026-05-03
+
+**Objective:** Record the electrical results from the final integrated stability testing performed during the demo period.
+
+**Work completed:** I consolidated the measured electrical results from final testing. For the drivetrain at 14.8 V, the measured current was about `0.6 A` steady-state and about `0.8 A` during ramp-up. For the weapon path, with the command intentionally limited to roughly `35%`, the measured current was about `3 A` steady-state and up to `4 A` during ramp-up. The regulated 3.3 V logic rail stayed within `5%` tolerance during simultaneous drivetrain and weapon loading, which was the main power-integrity goal for the board [1].
+
+**Design decisions:** These results justified the decision to separate logic regulation concerns from the high-current motor path and to retain significant local decoupling and transient protection around the control electronics [4][5].
+
+**Alternatives considered:** A less conservative power architecture might have reduced parts or copper area, but it would have left less margin against the exact combined-load case that was tested at the end.
+
+**Equations/calculations:** The basic power estimate used during review was `P = V * I`. Using the recorded drivetrain current at `14.8 V`, the steady-state drivetrain electrical input was on the order of `8.9 W`, and ramp-up power was about `11.8 W` for the measured operating condition. The weapon path at `3 A` to `4 A` corresponded to roughly `44.4 W` to `59.2 W` at the same nominal pack voltage, which explains why weapon loading dominated the electrical stress picture [1].
+
+**Code snippet:** I used this final power calculation to summarize the measured current data from the demo-period load test.
+
+```python
+VBATT_NOM = 14.8
+drive_current = {"steady": 0.6, "ramp": 0.8}
+weapon_current = {"steady": 3.0, "ramp": 4.0}
+
+for label, current in drive_current.items():
+    print(f"drive {label}: {VBATT_NOM * current:.1f} W")
+
+for label, current in weapon_current.items():
+    print(f"weapon {label}: {VBATT_NOM * current:.1f} W")
+```
+
+**Testing/debugging results:** The final results support the claim that the power subsystem remained stable under the combined load case tested during the demo period. Remaining uncertainty is mostly about the full range of transient cases, not about whether the final demo configuration could run at all.
+
+**Partner summary:** Abhinav tied these electrical results back to control responsiveness and fail-safe behavior. Shobhit verified that the final chassis and wiring packaging supported the tested configuration without forcing electrical rework.
+
+**Next steps:** Capture oscilloscope screenshots during future board tests and simplify the weapon-motor control path while preserving the same power-integrity margins.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

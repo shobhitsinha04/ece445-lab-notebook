@@ -223,6 +223,66 @@ for item, value in checks.items():
 
 **Next steps:** Finish protective outer geometry and prepare a clean final mechanical package.
 
+## 2026-04-30
+
+**Objective:** Develop the wheel protector from concept to near-final geometry in one work session.
+
+**Work completed:** I moved from a first wheel-protector draft to a second draft on the same day, with an intermediate planning sketch for the revised geometry. The quick progression shows that I was tuning clearance, printability, and coverage simultaneously.
+
+**Design decisions:** The wheel protector had to shield the wheel without rubbing under normal motion and without becoming a large unsupported printed span. I therefore iterated in small steps rather than committing to one heavy design.
+
+**Code snippet:** I used this clearance logic when sizing the second wheel-protector draft so the shield protected the tire without rubbing during normal driving.
+
+```python
+wheel_radius_mm = 35.0
+tire_clearance_mm = 3.0
+protector_wall_mm = 3.0
+
+inner_radius_mm = wheel_radius_mm + tire_clearance_mm
+outer_radius_mm = inner_radius_mm + protector_wall_mm
+
+print("protector inner radius:", inner_radius_mm)
+print("protector outer radius:", outer_radius_mm)
+```
+
+**Alternatives considered:** Leave the wheel exposed, or add a protective shell. The protector was worth the added part count because it reduced side exposure and improved the finished form factor.
+
+**Figures/diagrams/photos:** Figure S15 shows the first wheel-protector draft, Figure S16 shows the planning sketch for the second draft, Figure S17 shows the second draft, and Figure S18 shows the final CAD assembly state with the integrated outer geometry.
+
+![Figure S15 - First wheel protector draft on 2026-04-30](../../imgs/first%20draft%20wheel%20protector%202026-04-30%20at%201.44.06%20PM.jpeg)
+
+![Figure S16 - Plan for second wheel protector on 2026-04-30](../../imgs/plan%20for%20second%20draft%20wheel%20protector%202026-04-30%20at%201.46.36%20PM.jpeg)
+
+![Figure S17 - Second wheel protector draft on 2026-04-30](../../imgs/second%20draft%20wheel%20protector%202026-04-30%20at%202.04.47%20PM.jpeg)
+
+![Figure S18 - Final CAD assembly on 2026-04-30](../../imgs/final%20cad%20assembly%202026-04-30%20at%203.26.15%20PM.jpeg)
+
+**Testing/debugging results:** The multiple same-day versions show active design iteration and provide a clear paper trail for the final protective geometry.
+
+**Partner summary:** Abhinav used the final CAD for system explanation and integration planning. Rahul used it to confirm that external electrical additions such as the ESC still had a viable packaging location.
+
+**Next steps:** Weigh the newest printed parts and assemble the final robot.
+
+## 2026-05-01 to 2026-05-03
+
+**Objective:** Close out the mechanical build with final printed-part mass checks and the completed assembly.
+
+**Work completed:** I weighed the newly printed parts, then assembled and photographed the final robot. By this stage the major mechanical questions had shifted from geometry creation to validation that the complete outer shell, weapon support, and protectors still formed a coherent package. During demo-day stability testing, this final integrated chassis ran while the drivetrain and weapon subsystems were both active, so the mechanical packaging had to survive vibration, floor-driving loads, and wiring movement under real operating conditions [1].
+
+**Design decisions:** The final form kept the rectangular body with bolt-on front structure and protective side geometry. This kept the robot serviceable and consistent with the earlier print-iterate-assemble process.
+
+**Figures/diagrams/photos:** Figure S19 shows the printed-part weighing step on 2026-05-01, and Figure S20 shows the final robot on 2026-05-03.
+
+![Figure S19 - Weighing newly printed parts on 2026-05-01](../../imgs/weighing%20newly%20printed%20parts%202026-05-01%20at%203.04.07%20PM.jpeg)
+
+![Figure S20 - Final assembled battlebot on 2026-05-03](../../imgs/the%20final%20battlebot%202026-05-03%20at%206.14.40%20PM.jpeg)
+
+**Testing/debugging results:** The final assembly confirmed that the design reached a stable end state after several mechanical revisions, including skid changes, coupling failure, wheel selection, and weapon mount redesign. The combined-load stability test also supports the claim that the chassis and mounting strategy were mechanically serviceable in the final demo configuration, because the integrated platform stayed operational while both drivetrain and weapon loading were present [1].
+
+**Partner summary:** Abhinav closed out system integration and the control narrative. Rahul closed out board, power, and protection documentation.
+
+**Next steps:** Make the packaging denser in future mechanical revisions while preserving wheel protection, and record final printed dimensions and total mass during assembly.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).

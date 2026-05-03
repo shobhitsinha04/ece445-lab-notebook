@@ -173,6 +173,138 @@ def compute_motor_commands(forward_raw, turn_raw):
 
 **Next steps:** Integrate weapon control into the same operator workflow and validate the full robot under floor testing.
 
+## 2026-04-28
+
+**Objective:** Move weapon control to an external ESC and debug the new PWM control path.
+
+**Work completed:** After the custom brushless path continued to consume schedule, I treated the external ESC as the fastest route to a reliable weapon subsystem. I updated the control assumptions to servo-style PWM timing and logged the mismatch possibilities that could explain incorrect ESC behavior, including pulse-width range, arming/calibration sequence, and common-ground problems. This switch happened after the earlier MCF8316A-based approach proved difficult to configure repeatably [1][6].
+
+**Design decisions:** Migrating the weapon channel to a commercial ESC reduced firmware scope and concentrated our effort on producing a valid command signal. This was a pragmatic integration decision rather than a perfect architectural one.
+
+**Alternatives considered:** Staying on the custom brushless driver would have kept a more self-contained board-level design, but it was no longer the lowest-risk path to a working demonstration.
+
+**Equations/calculations:** I modeled the new control path as pulse-position signaling rather than duty-cycle-only signaling. The key requirement became correct pulse width and update timing, not just an average PWM percentage.
+
+**Code snippet:** For the ESC version, I mapped the operator command range `0..255` into a servo-style pulse width and kept a single `stopAllMotors()` path for both drive and weapon shutdown.
+
+```cpp
+#define ESC_PULSE_MIN 1000
+#define ESC_PULSE_MAX 2000
+#define WM_INPUT_MAX  255
+
+int currentWM = 0;
+
+int clampWeapon(int value) {
+  if (value < 0) return 0;
+  if (value > WM_INPUT_MAX) return WM_INPUT_MAX;
+  return value;
+}
+
+void setWeaponThrottle(int throttle) {
+  currentWM = clampWeapon(throttle);
+  long pulseUs = ESC_PULSE_MIN +
+    ((long)currentWM * (ESC_PULSE_MAX - ESC_PULSE_MIN)) / WM_INPUT_MAX;
+  weaponEsc.speed((int)pulseUs);
+}
+
+void stopAllMotors() {
+  setMotor1(0);
+  setMotor2(0);
+  setWeaponThrottle(0);
+}
+```
+
+**Testing/debugging results:** The notable non-routine result was ESC beeping and unstable behavior at higher commands, which pointed toward calibration or signal interpretation issues rather than a solved control path.
+
+**Partner summary:** Rahul documented ESC wiring, the common-ground requirement, and the LiPo short incident risk analysis. Shobhit updated packaging assumptions because the ESC introduced additional wiring volume and thermal/mounting constraints.
+
+**Next steps:** Finish ESC signal validation, then move to integrated floor tests with the assembled chassis.
+
+## 2026-04-30
+
+**Objective:** Consolidate the project into a final system explanation and capture the integrated state of the robot.
+
+**Work completed:** I prepared the system-level story for the presentation: problem definition, architecture, key tradeoffs, debugging history, and final operational state. I also recorded how the control design matured through multiple integration choices rather than only listing the final working parts.
+
+**Design decisions:** I emphasized traceability from design risk to integration change. In particular, the decision to move weapon control to an external ESC was documented as an engineering trade rather than an arbitrary late swap.
+
+**Alternatives considered:** A purely feature-focused presentation would have hidden the debugging logic. I instead chose to make the integration narrative explicit because it better reflects real engineering development.
+
+**Figures/diagrams/photos:** Figure A4 shows the final CAD assembly used to communicate the integrated layout before the fully assembled robot photo set was complete.
+
+![Figure A4 - Final CAD assembly on 2026-04-30](../../imgs/final%20cad%20assembly%202026-04-30%20at%203.26.15%20PM.jpeg)
+
+**Testing/debugging results:** The system was close enough to final form that documentation and verification could now be tied to concrete integrated hardware, not just subsystem sketches.
+
+**Partner summary:** Rahul finalized the electrical design explanation, especially protection and power-path choices. Shobhit finalized the wheel protector and last mechanical refinements needed for a cleaner final assembly.
+
+**Next steps:** Perform last procurement/risk checks and capture the finished robot in its final build state.
+
+## 2026-05-01
+
+**Objective:** Check the impact of last-minute motor and printed-part constraints on controllability and schedule.
+
+**Work completed:** I revisited the control implications of using replacement or borderline-rated motors with a 4S pack. The main question was whether duty-cycle limiting could safely constrain average voltage for drive motors if ideal replacements were unavailable. I also reviewed the printed-part mass updates because they affect acceleration and control feel.
+
+**Design decisions:** Any temporary use of 12 V hardware on a 16.8 V max pack had to be treated as a constrained-risk compromise, not as proof of full compatibility.
+
+**Alternatives considered:** Waiting for perfectly matched replacement motors would have been cleaner electrically, but schedule pressure made it necessary to at least quantify the PWM-limiting option.
+
+**Equations/calculations:** The previously derived `71.4%` duty-cycle estimate for a 12 V average-equivalent command on a 4S pack remained the control reference. I noted again that this only addresses average voltage, not peak electrical stress.
+
+**Figures/diagrams/photos:** Figure A5 shows the printed parts being weighed on 2026-05-01, which fed into the final integration picture.
+
+![Figure A5 - Weighing newly printed parts on 2026-05-01](../../imgs/weighing%20newly%20printed%20parts%202026-05-01%20at%203.04.07%20PM.jpeg)
+
+**Testing/debugging results:** This was mostly a risk-management session. The main output was a clearer boundary between acceptable temporary operation and unacceptable overvoltage assumptions.
+
+**Partner summary:** Rahul checked compatibility from the electrical side, including current draw and thermal risk. Shobhit checked whether any replacement hardware would still fit the existing printed geometry.
+
+**Next steps:** Capture final photos and final verification results.
+
+## 2026-05-03
+
+**Objective:** Record the final integrated robot state and summarize verification status.
+
+**Work completed:** I documented the final assembled system and the integrated floor-test state of the robot. By this point the notebook showed the full design arc: concept, control architecture, PCB, mechanical packaging, driver debugging, ESC migration, and final assembled platform. During demo-day testing, end-to-end wireless latency measured 75 ms, command updates were stable at 50 Hz over a 15-foot line-of-sight link, and firmware safety logic disabled motor outputs within 250 ms of communication loss [1].
+
+**Design decisions:** The final narrative emphasized what actually shipped as the working system: custom control electronics for the drive path, ESP32-based command generation, a printed chassis, and an externally controlled weapon subsystem where necessary to preserve reliability.
+
+**Code snippet:** The final firmware safety path used a command watchdog so the motors would shut down if the controller stopped sending updates.
+
+```cpp
+static const uint32_t COMMAND_TIMEOUT_MS = 250;
+volatile uint32_t lastCommandMillis = 0;
+bool watchdogStopped = false;
+
+void handleCommand(String cmd) {
+  lastCommandMillis = millis();
+  watchdogStopped = false;
+  // Parse m1=...,m2=...,wm=... and update outputs here.
+}
+
+void loop() {
+  if (!watchdogStopped && millis() - lastCommandMillis > COMMAND_TIMEOUT_MS) {
+    stopAllMotors();
+    watchdogStopped = true;
+    sendBleMessage("{\"watchdog\":\"timeout\"}");
+  }
+  delay(20);
+}
+```
+
+**Figures/diagrams/photos:** Figure A6 shows the floor-test configuration from 2026-04-27, and Figure A7 shows the final assembled robot from 2026-05-03.
+
+![Figure A6 - Integrated testing session on 2026-04-27](../../imgs/testing%20session%202026-04-27%20at%209.52.51%20PM.png)
+
+![Figure A7 - Final battlebot on 2026-05-03](../../imgs/the%20final%20battlebot%202026-05-03%20at%206.14.40%20PM.jpeg)
+
+**Testing/debugging results:** The final control checks met the project requirements: the wireless link remained stable at 15 feet, response stayed under the 100 ms requirement, and comm-loss shutdown stayed within the 250 ms requirement [1].
+
+**Partner summary:** Rahul closed out the electrical explanation and protection discussion. Shobhit closed out the final mechanical assembly, fit, and protective geometry.
+
+**Next steps:** Capture raw controller logs, PWM traces, and repeatable weapon spin-up data during future full-system tests.
+
 ## References
 
 1. Final presentation slides and verification results: [ECE 445 Final Presentation-1.pdf](../../ECE%20445%20Final%20Presentation-1.pdf).
